@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="lunbo">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/angular.js" type="text/javascript"></script>
+    <script src="js/angular-animate.js" type="text/javascript"></script>
+    <title></title>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+        div {
+            position: relative;
+        }
+        div ul {
+            position: absolute;
+        }
+        div ul li {
+            list-style-type: none;
+            position: absolute;
+        }
+        div ul li a img {
+            display: block;
+            width: 730px;
+            height: 454px;
+            border: 1px #000 solid;
+        }
+        div ul.listContent{
+            position: absolute;
+            left: 500px;
+            top: 410px;
+            width: 200px;
+            height: 25px;
+        }
+        div ul.listContent li.list{
+            position: relative;
+            display: block;
+            width: 25px;
+            height: 25px;
+            float: left;
+            margin: 0 5px;
+            border: 1px solid blue;
+            text-align: center;
+            line-height: 25px;
+            cursor: pointer;
+        }
+        .active{
+            background: #161616;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body ng-controller="lunboController">
+<div lunbo ></div>
+<script type="text/ng-template" id="lunbo.html">
+        <div ng-mouseleave="start()">
+            <ul ng-switch="pic">
+                <li ng-switch-when="0" class="fade-in "><a href="{{img1.href}}"><img src="{{img1.src}}" alt=""/></a></li>
+                <li ng-switch-when="1" class="fade-in "><a href="{{img2.href}}"><img src="{{img2.src}}" alt=""/></a></li>
+                <li ng-switch-when="2" class="fade-in "><a href="{{img3.href}}"><img src="{{img3.src}}" alt=""/></a></li>
+                <li ng-switch-when="3" class="fade-in "><a href="{{img4.href}}"><img src="{{img4.src}}" alt=""/></a></li>
+                <li ng-switch-when="4" class="fade-in "><a href="{{img5.href}}"><img src="{{img5.src}}" alt=""/></a></li>
+            </ul>
+            <ul class="listContent" >
+                <li class="list" ng-click="clickEvent(0)" >1</li>
+                <li class="list" ng-click="clickEvent(1)" >2</li>
+                <li class="list" ng-click="clickEvent(2)" >3</li>
+                <li class="list" ng-click="clickEvent(3)" >4</li>
+                <li class="list" ng-click="clickEvent(4)" >5</li>
+            </ul>
+        </div>
+</script>
+</body>
+<script>
+    var app=angular.module('lunbo',['ngAnimate']);
+    app.controller('lunboController',['$scope','readJSON','mouseEvent' ,function ($scope,readJSON,mouseEvent) {
+
+    }]);
+    app.factory('readJSON',['$http','$q', function ($http,$q) {
+        return {
+            query: function (){
+                var deferred=$q.defer();
+                $http({
+                    method:'GET',
+                    url:'img.json'
+                }).success(function (data, status, header, config) {
+                    deferred.resolve(data);
+                }).error(function (data, status, header, config) {
+                    deferred.reject(data);
+                });
+                return deferred.promise;
+            }
+        }
+    }]);
+    /*这个服务有问题，需改进，暂时没想到解决办法*/
+    app.factory('mouseEvent', function () {
+       return{
+           mouseevent: function (ele1,ele2 ,event, done) {
+
+
+           }
+       }
+    });
+    app.directive('lunbo',['readJSON','$timeout','mouseEvent' ,function (readJSON,$timeout,mouseEvent) {
+        return{
+            restrict:'EA',
+            templateUrl:'lunbo.html',
+            scope:{},
+            link: function (scope, element, attr) {
+                var promise=readJSON.query();
+                var step=0;
+                var time=null;
+
+                promise.then(function (data) {
+                    scope.img1=data[0];
+                    scope.img2=data[1];
+                    scope.img3=data[2];
+                    scope.img4=data[3];
+                    scope.img5=data[4];
+                });
+                var stepFun= function () {
+                    element.find("li").removeClass("active");
+                    element.find("li").eq(step+1).addClass("active");
+                    scope.pic=step;
+                    step++;
+                    step=step%5;
+                    time=$timeout(function () {
+                        stepFun();
+                    },5000);
+                };
+                stepFun();
+                /*点击事件*/
+                scope.clickEvent= function (number) {
+                    scope.pic=number;
+                    element.find("li").removeClass("active");
+                    element.find("li").eq(number+1).addClass("active");
+                    $timeout.cancel(time);
+                    step=number;
+                };
+                /*鼠标移除动画重新开始*/
+                scope.start= function () {
+                    $timeout.cancel(time);
+                    stepFun();
+                }
+            }
+        }
+    }]);
+    app.animation('.fade-in', function () {
+        return{
+            enter: function (element, done) {
+                var step=0;
+                var time=null;//计时器
+                var animationFunc= function () {
+                    step+=20;
+                    if(step>100){
+                        done();
+                        clearInterval(time);
+                    }else{
+                        element.css("opacity",step/100);
+                    }
+                };
+                element.css("opacity",0);
+                time=setInterval(animationFunc,50);
+            },
+            leave: function (element,done) {
+                var step=100;
+                var time=null;
+                var animationFun= function () {
+                    step-=20;
+                    if(step<0){
+                        done();
+                        clearInterval(time);
+                    }else{
+                        element.css("opacity",step/100)
+                    }
+                };
+                element.css("opacity",1);
+                time=setInterval(animationFun,40);
+            }
+        }
+    })
+</script>
+</html>
