@@ -7,7 +7,7 @@
 	4. 一个域名下存放的cookie的个数是有限制的，不同的浏览器存放的个数不一样
 	5 .每个cookie存放的内容大小也是有限制的，不同的浏览器存放大小不一样
 我们通过document.cookie来获取当前网站下的cookie的时候，得到的字符串形式的值，他包含了当前网站下所有的cookie。他会把所有的cookie通过一个分号+空格的形式串联起来。如果我们想长时间存放一个cookie。需要在设置这个cookie的时候同时给他设置一个过期的时间。cookie默认是临时存储的，当浏览器关闭进程的时候自动销毁。
-####原生js分装setCookie和getCookie
+####原生js封装setCookie和getCookie
 #####setCookie:
 ```javascript
 var setCookie=function(key,value,time){
