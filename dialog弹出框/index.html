@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device,initial-scale=1,user-scalable=no"/>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+<!--<div class="g-dialog-container">
+    <div class="dialog-window">
+        <div class="dialog-header waiting"></div>
+        <div class="dialog-content">
+            你是否要清空
+        </div>
+        <div class="dialog-footer">
+            <button class="green">按钮1</button>
+            <button>按钮2</button>
+            <button class="red">按钮3</button>
+        </div>
+    </div>
+</div>-->
+    <button id="btn1">没有传递任何参数</button>
+    <button id="btn2">弹出一个不带按钮，且是警告框，并且2秒后自动关闭</button>
+    <button id="btn3">带确认和取消按钮的成功框，点击按钮直接关闭</button>
+    <button id="btn4">带确认的警告框，点击按钮不关闭</button>
+    <button id="btn5">多组合的按钮框，样式可定制</button>
+    <button id="btn6">带确认和删除的框，点击确认弹加载框2秒自动关闭，点击删除把上一次框关闭</button>
+</body>
+<script src="./js/zepto.js"></script>
+<script src="./js/zepto.touch.js"></script>
+<script src="./js/index.js"></script>
+<script>
+    $("#btn1").tap(function(){
+        var d=$.Dialog();
+    });
+    $("#btn2").tap(function(){
+        var d=$.Dialog({
+            type:'warning',
+            delay:2000
+        });
+    });
+    $("#btn3").tap(function(){
+        var d=$.Dialog({
+            type:'ok',
+            buttons:[
+                {
+                    type:'green',
+                    text:'确认'
+                },
+                {
+                    type:'red',
+                    text:'取消'
+                }
+                ]
+        });
+    });
+    $("#btn4").tap(function(){
+        var d=$.Dialog({
+            type:'warning',
+            buttons:[
+                {
+                    type:'green',
+                    text:'确认',
+                    callback:function(){return false;}
+                }
+            ]
+        });
+    });
+    $("#btn5").tap(function(){
+        var d=$.Dialog({
+            type:'warning',
+            delay:2000,
+            delayCallback:function(){alert(11)}
+        });
+    });
+    $("#btn6").tap(function(){
+        var d=$.Dialog({
+            type:'warning',
+            delay:2000,
+            maskClose:true
+            // delayCallback:function(){alert(11)}
+        });
+    });
+</script>
+</html>
