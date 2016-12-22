@@ -1,0 +1,39 @@
+*{margin: 0;padding: 0;}
+#smPic{
+    position: relative;
+    border: 1px solid red;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+}
+#smPic img{
+    width: 400px;
+    height: 400px;
+}
+#mask{
+    /*display: none;*/
+    width:400px;
+    height: 400px;
+    background: rgba(20, 20, 20, 0.3);
+    position:absolute;
+    top: 0;
+    left:0;
+}
+#bigPic{
+    width: 300px;
+    height: 300px;
+    border: 1px solid red;
+    position: absolute;
+    z-index: 999;
+    overflow: hidden;
+}
+#bigPic img{
+    position: absolute;
+}
+#win{
+    /*width: 100px;*/
+    height: 100px;
+    border: 1px dashed rgba(255,255,255,0.3);
+    position: absolute;
+    cursor: crosshair;
+}
